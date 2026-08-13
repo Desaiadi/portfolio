@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Rec-Sense — Proobs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Rec-Sense: a recommender system with sentiment analysis, ranking recommendations with SASS. Project by Aditya Desai.">
+<meta property="og:title" content="Rec-Sense — Proobs">
+<meta property="og:description" content="Rec-Sense: a recommender system with sentiment analysis, ranking recommendations with SASS. Project by Aditya Desai.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.proobs.com/Proobs.dc.html">
+<meta name="twitter:card" content="summary">
+<script src="./support.js"></script>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#08090a"/><text x="50" y="50" fill="#8ab4f8" font-family="Helvetica, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="central">PR</text></svg>
+</template>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; -webkit-font-smoothing: antialiased; background: #08090a; }
+  ::selection { background: oklch(0.72 0.13 250 / 0.3); }
+  :root {
+    --bg: #08090a; --bg2: #0e1012; --card: rgba(255,255,255,0.035); --card-h: rgba(255,255,255,0.06);
+    --fg: #f4f5f6; --mut: rgba(244,245,246,0.52); --mut2: rgba(244,245,246,0.32);
+    --line: rgba(255,255,255,0.09); --line2: rgba(255,255,255,0.16);
+    --acc: oklch(0.74 0.13 250); --acc2: oklch(0.76 0.12 168); --acc3: oklch(0.78 0.13 72); --glow: oklch(0.74 0.13 250 / 0.16);
+    --nav: rgba(8,9,10,0.6);
+  }
+  [data-theme="light"] {
+    --bg: #fbfbfc; --bg2: #f2f3f5; --card: rgba(9,10,12,0.03); --card-h: rgba(9,10,12,0.055);
+    --fg: #0b0c0e; --mut: rgba(11,12,14,0.58); --mut2: rgba(11,12,14,0.38);
+    --line: rgba(9,10,12,0.1); --line2: rgba(9,10,12,0.18);
+    --acc: oklch(0.55 0.14 250); --acc2: oklch(0.52 0.12 168); --acc3: oklch(0.58 0.13 66); --glow: oklch(0.55 0.14 250 / 0.12);
+    --nav: rgba(251,251,252,0.65);
+  }
+  a { color: var(--acc); text-decoration: none; }
+  a:hover { color: var(--fg); }
+  @keyframes prFloat { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(0,-3%,0) scale(1.06); } }
+  @keyframes prDrift { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
+</style>
+</helmet>
+<div data-theme="{{ theme }}" style="background: var(--bg); color: var(--fg); font-family: Manrope, system-ui, sans-serif; min-height: 100vh; overflow-x: clip; transition: background 500ms cubic-bezier(0.22,1,0.36,1), color 500ms cubic-bezier(0.22,1,0.36,1);">
+
+  <div data-fx="glow" style="position: fixed; top: 0; left: 0; width: 620px; height: 620px; margin: -310px 0 0 -310px; border-radius: 50%; background: radial-gradient(circle at center, var(--glow), transparent 62%); pointer-events: none; z-index: 1; opacity: 0; transition: opacity 700ms ease; will-change: transform;"></div>
+  <div data-fx="ring" style="position: fixed; top: 0; left: 0; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; border: 1px solid var(--fg); pointer-events: none; z-index: 100; opacity: 0; mix-blend-mode: difference; transition: opacity 400ms ease, width 350ms cubic-bezier(0.22,1,0.36,1), height 350ms cubic-bezier(0.22,1,0.36,1), margin 350ms cubic-bezier(0.22,1,0.36,1), background 350ms ease; will-change: transform;"></div>
+  <div data-fx="dot" style="position: fixed; top: 0; left: 0; width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 50%; background: var(--fg); pointer-events: none; z-index: 100; opacity: 0; transition: opacity 400ms ease; will-change: transform;"></div>
+  <header style="position: fixed; top: 0; left: 0; right: 0; z-index: 90; backdrop-filter: blur(24px) saturate(1.6); -webkit-backdrop-filter: blur(24px) saturate(1.6); background: var(--nav); border-bottom: 1px solid var(--line);">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 0 28px; height: 54px; display: flex; align-items: center; gap: 28px;">
+      <a href="#top" onClick="{{ goHome }}" style="display: flex; align-items: baseline; gap: 7px; color: var(--fg); font-weight: 800; font-size: 16px; letter-spacing: -0.03em;">
+        proobs
+        <span style="width: 5px; height: 5px; border-radius: 50%; background: var(--acc); display: block; margin-bottom: 2px;"></span>
+      </a>
+      <nav style="display: flex; gap: 22px; margin-left: auto; align-items: center;">
+        <a href="#index" style="color: var(--mut); font-size: 13.5px; font-weight: 500; letter-spacing: -0.01em; transition: color 300ms;" style-hover="color: var(--fg);">Projects</a>
+        <a href="#experience" style="color: var(--mut); font-size: 13.5px; font-weight: 500; letter-spacing: -0.01em; transition: color 300ms;" style-hover="color: var(--fg);">Experience</a>
+        <a href="#education" style="color: var(--mut); font-size: 13.5px; font-weight: 500; letter-spacing: -0.01em; transition: color 300ms;" style-hover="color: var(--fg);">Education</a>
+        <a href="#about" style="color: var(--mut); font-size: 13.5px; font-weight: 500; letter-spacing: -0.01em; transition: color 300ms;" style-hover="color: var(--fg);">About</a>
+        <a href="#writing" style="color: var(--mut); font-size: 13.5px; font-weight: 500; letter-spacing: -0.01em; transition: color 300ms;" style-hover="color: var(--fg);">Writing</a>
+        <a href="#contact" style="color: var(--mut); font-size: 13.5px; font-weight: 500; letter-spacing: -0.01em; transition: color 300ms;" style-hover="color: var(--fg);">Contact</a>
+        <button onClick="{{ toggleTheme }}" title="Toggle appearance" style="margin-left: 4px; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line); background: var(--card); color: var(--mut); cursor: pointer; font-family: 'JetBrains Mono', monospace; font-size: 11px; transition: all 300ms;" style-hover="color: var(--fg); border-color: var(--line2);">{{ themeIcon }}</button>
+      </nav>
+    </div>
+  </header>
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <main id="top">
+
+    <section data-figure="1" style="position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-start; padding: 168px 28px 84px; max-width: 1240px; margin: 0 auto; overflow: clip;">
+      <div style="position: absolute; top: -14%; left: 42%; width: 62vw; height: 62vw; max-width: 900px; max-height: 900px; border-radius: 50%; background: radial-gradient(circle at center, var(--glow), transparent 65%); filter: blur(18px); animation: prFloat 16s ease-in-out infinite; pointer-events: none;"></div>
+      <div style="position: absolute; right: -2%; bottom: 0; top: 4%; width: min(72%, 880px); z-index: 0;">
+        <div data-figure-img="1" style="position: absolute; inset: 0; background-color: var(--fg); opacity: 0.16; transition: opacity 700ms cubic-bezier(0.22,1,0.36,1), transform 900ms cubic-bezier(0.22,1,0.36,1); -webkit-mask-image: url('assets/figure-torso.png'), radial-gradient(circle var(--r, 1600px) at var(--mx, 52%) var(--my, 45%), #000 26%, rgba(0,0,0,0.42) 62%, transparent 82%); mask-image: url('assets/figure-torso.png'), radial-gradient(circle var(--r, 1600px) at var(--mx, 52%) var(--my, 45%), #000 26%, rgba(0,0,0,0.42) 62%, transparent 82%); -webkit-mask-size: contain, auto; mask-size: contain, auto; -webkit-mask-repeat: no-repeat, no-repeat; mask-repeat: no-repeat, no-repeat; -webkit-mask-position: right bottom, center center; mask-position: right bottom, center center; -webkit-mask-composite: source-in; mask-composite: intersect;"></div>
+      </div>
+      <div style="position: relative; z-index: 2;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mut2); margin-bottom: 34px; display: flex; gap: 14px; align-items: center;">
+          <span>proobs.com</span>
+          <span style="flex: 0 0 42px; height: 1px; background: var(--line2);"></span>
+          <span>est. 2026</span>
+          <span style="flex: 0 0 42px; height: 1px; background: var(--line2);"></span>
+          <span>by Aditya Desai</span>
+        </div>
+        <h1 style="margin: 0; font-size: clamp(44px, 8.4vw, 124px); line-height: 0.87; letter-spacing: -0.052em; font-weight: 800;">
+          <span style="color: var(--fg);">PRO</span><span style="color: var(--mut2); font-weight: 300;">ject</span><br />
+          <span style="color: var(--fg);">OBS</span><span style="color: var(--mut2); font-weight: 300;">ervatory</span>
+        </h1>
+        <p style="margin: 38px 0 0; max-width: 520px; font-size: clamp(16px, 1.7vw, 19px); line-height: 1.5; letter-spacing: -0.015em; color: var(--mut); text-wrap: pretty;">
+          PROject OBServatory aka PROOBS.com is a platform developed by Aditya Desai (me). One place to keep everything I build — ML projects, AI agents, data exploration and some random shit. Less of a portfolio, more of a tech exhibition.
+        </p>
+        <div style="margin-top: 38px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center;">
+          <a href="#index" style="display: inline-flex; align-items: center; gap: 10px; padding: 13px 24px; border-radius: 999px; background: var(--fg); color: var(--bg); font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; transition: transform 400ms cubic-bezier(0.22,1,0.36,1), opacity 300ms;" style-hover="transform: scale(1.035); color: var(--bg);">Browse the index</a>
+          <a href="#about" style="display: inline-flex; align-items: center; gap: 10px; padding: 13px 24px; border-radius: 999px; border: 1px solid var(--line2); color: var(--fg); font-size: 14.5px; font-weight: 500; letter-spacing: -0.01em; white-space: nowrap; transition: all 400ms cubic-bezier(0.22,1,0.36,1);" style-hover="background: var(--card-h); color: var(--fg);">Who is behind it</a>
+        </div>
+      </div>
+      <div style="position: relative; z-index: 2; margin-top: auto; align-self: flex-end; max-width: 440px; padding: 26px 28px; border-radius: 22px; border: 1px solid var(--line); background: var(--nav); backdrop-filter: blur(22px) saturate(1.5); -webkit-backdrop-filter: blur(22px) saturate(1.5);">
+        <div style="font-size: clamp(26px, 3vw, 36px); font-weight: 700; letter-spacing: -0.035em; line-height: 1.05;">Aditya Desai</div>
+        <div style="margin-top: 10px; font-size: 16px; letter-spacing: -0.015em; color: var(--mut); line-height: 1.45;">MS in Data Science at New York University</div>
+        <div style="margin-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--acc); line-height: 1.8; text-wrap: balance;">AI Engineer | ML Researcher | Data Scientist | Software Engineer</div>
+        <p style="margin: 18px 0 0; font-size: 15px; line-height: 1.6; color: var(--mut); text-wrap: pretty;">I build systems that turn data into something usable — pipelines, models, and the interfaces on top of them. This site is where all of it lives.</p>
+      </div>
+    </section>
+
+    <section id="index" style="max-width: 1240px; margin: 0 auto; padding: 90px 28px 40px; scroll-margin-top: 54px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end; justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 26px;">
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mut2); margin-bottom: 14px;">The index</div>
+          <h2 style="margin: 0; font-size: clamp(32px, 5vw, 60px); letter-spacing: -0.04em; font-weight: 700; line-height: 1;">Everything, in one field of view</h2>
+        </div>
+        <div style="display: flex; gap: 4px; padding: 4px; border-radius: 999px; border: 1px solid var(--line); background: var(--card);">
+          <button onClick="{{ setCards }}" style="{{ cardsBtn }}">Cards</button>
+          <button onClick="{{ setGrid }}" style="{{ gridBtn }}">Grid</button>
+        </div>
+      </div>
+    </section>
+
+    <sc-if value="{{ isCards }}" hint-placeholder-val="{{ true }}">
+    <section style="max-width: 1240px; margin: 0 auto; padding: 40px 28px 40px; display: flex; flex-direction: column; gap: 96px;">
+      <sc-for list="{{ projects }}" as="p" hint-placeholder-count="3">
+        <article data-reveal="1" data-tilt="1" style="position: relative;">
+          <div onClick="{{ p.open }}" style="cursor: pointer; display: grid; grid-template-columns: 1fr; gap: 30px;">
+            <div style="position: relative; border-radius: 22px; overflow: hidden; border: 1px solid var(--line); background: var(--bg2); aspect-ratio: 16 / 7;">
+              <div role="img" aria-label="{{ p.name }}" style="{{ p.imgStyle }}" style-hover="transform: scale(1.035);"></div>
+              <div style="position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(to top, rgba(0,0,0,0.55), transparent); pointer-events: none;"></div>
+              <div style="position: absolute; left: 22px; bottom: 20px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.82);">{{ p.index }} — {{ p.year }}</div>
+            </div>
+            <div style="display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: 40px; align-items: start;">
+              <div>
+                <h3 style="margin: 0 0 10px; font-size: clamp(28px, 4vw, 46px); letter-spacing: -0.04em; font-weight: 700; line-height: 1.02;">{{ p.name }}</h3>
+                <p style="margin: 0; font-size: clamp(16px, 2vw, 20px); letter-spacing: -0.015em; color: var(--mut); line-height: 1.4;">{{ p.tagline }}</p>
+                <div style="margin-top: 16px; display: flex; align-items: center; gap: 9px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.04em;">
+                  <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--acc3); display: block;"></span>
+                  <span style="color: var(--fg);">{{ p.sub }}</span>
+                  <span style="color: var(--mut2);">— {{ p.status }}</span>
+                </div>
+              </div>
+              <div>
+                <p style="margin: 0 0 20px; font-size: 15.5px; line-height: 1.62; color: var(--mut); text-wrap: pretty;">{{ p.short }}</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 22px;">
+                  <sc-for list="{{ p.stack }}" as="t" hint-placeholder-count="3">
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.04em; padding: 5px 10px; border-radius: 6px; border: 1px solid var(--line); color: var(--mut2);">{{ t }}</span>
+                  </sc-for>
+                </div>
+                <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; letter-spacing: -0.01em; color: var(--acc);">Open project →</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </sc-for>
+    </section>
+    </sc-if>
+
+    <sc-if value="{{ isGrid }}">
+    <section style="max-width: 1240px; margin: 0 auto; padding: 40px 28px; display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px;">
+      <sc-for list="{{ projects }}" as="p" hint-placeholder-count="6">
+        <article onClick="{{ p.expand }}" data-tilt="1" style="{{ p.tileStyle }}">
+          <div style="position: relative; border-radius: 14px; overflow: hidden; background: var(--bg2); aspect-ratio: 16 / 10; border: 1px solid var(--line);">
+            <div role="img" aria-label="{{ p.name }}" style="{{ p.imgStyle }}" style-hover="transform: scale(1.05);"></div>
+          </div>
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 16px;">
+            <h3 style="margin: 0; font-size: 20px; letter-spacing: -0.03em; font-weight: 700;">{{ p.name }}</h3>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mut2); letter-spacing: 0.1em;">{{ p.index }}</span>
+          </div>
+          <p style="margin: 6px 0 0; font-size: 14px; color: var(--mut); line-height: 1.45; letter-spacing: -0.01em;">{{ p.tagline }}</p>
+          <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.04em;">
+            <span style="width: 5px; height: 5px; border-radius: 50%; background: var(--acc3); display: block;"></span>
+            <span style="color: var(--mut);">{{ p.sub }}</span>
+            <span style="color: var(--mut2);">— {{ p.status }}</span>
+          </div>
+          <sc-if value="{{ p.isOpen }}">
+            <div style="overflow: hidden; margin-top: 14px; border-top: 1px solid var(--line); padding-top: 14px;">
+              <p style="margin: 0 0 14px; font-size: 14px; line-height: 1.6; color: var(--mut); text-wrap: pretty;">{{ p.short }}</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
+                <sc-for list="{{ p.stack }}" as="t" hint-placeholder-count="3">
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 4px 8px; border-radius: 5px; border: 1px solid var(--line); color: var(--mut2);">{{ t }}</span>
+                </sc-for>
+              </div>
+              <button onClick="{{ p.open }}" style="border: 0; background: var(--fg); color: var(--bg); padding: 9px 16px; border-radius: 999px; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 600; cursor: pointer;">Open project</button>
+            </div>
+          </sc-if>
+        </article>
+      </sc-for>
+    </section>
+    </sc-if>
+
+    <section id="about" style="max-width: 1240px; margin: 0 auto; padding: 110px 28px 20px; scroll-margin-top: 54px;">
+      <div style="border-top: 1px solid var(--line); padding-top: 42px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.62fr); gap: 56px; align-items: start;">
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mut2); margin-bottom: 14px;">About</div>
+          <h2 style="margin: 0 0 20px; font-size: clamp(30px, 4vw, 50px); letter-spacing: -0.04em; font-weight: 700; line-height: 1.02;">Aditya Desai</h2>
+          <p style="margin: 0; max-width: 620px; font-size: 16px; line-height: 1.65; color: var(--mut); text-wrap: pretty;">I work on data and machine-learning systems — from ingestion pipelines and streaming infrastructure to models and the interfaces that make them usable. Most of what I build starts as a question I want answered, then turns into something that runs.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: var(--mut2);">
+          <div style="display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid var(--line); padding-top: 12px;"><span>Now</span><span style="color: var(--fg);">AI Engineer — NYU SPS</span></div>
+          <div style="display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid var(--line); padding-top: 12px;"><span>Studying</span><span style="color: var(--fg);">NYU Center for Data Science</span></div>
+          <div style="display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid var(--line); padding-top: 12px;"><span>Based</span><span style="color: var(--fg);">New York, NY</span></div>
+          <div style="display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid var(--line); padding-top: 12px;"><span>Field</span><span style="color: var(--fg);">AI / ML / Data</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="experience" style="max-width: 1240px; margin: 0 auto; padding: 90px 28px 20px; scroll-margin-top: 54px;">
+      <div style="border-top: 1px solid var(--line); padding-top: 42px; display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end; justify-content: space-between;">
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mut2); margin-bottom: 14px;">Experience</div>
+          <h2 style="margin: 0; font-size: clamp(28px, 3.6vw, 44px); letter-spacing: -0.04em; font-weight: 700; line-height: 1.05;">Ten roles, one through-line</h2>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 18px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mut2);">
+          <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--acc); display: block;"></span>AI / ML / Software</span>
+          <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--line2); display: block;"></span>Earlier work</span>
+        </div>
+      </div>
+      <div style="margin-top: 40px; position: relative; padding-left: 4px;">
+        <div style="position: absolute; left: 148px; top: 8px; bottom: 8px; width: 1px; background: linear-gradient(to bottom, transparent, var(--line2) 8%, var(--line2) 92%, transparent);"></div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <sc-for list="{{ expRecords }}" as="r" hint-placeholder-count="6">
+            <div onClick="{{ r.toggle }}" style="cursor: pointer; display: grid; grid-template-columns: 132px 32px minmax(0, 1fr); gap: 0; align-items: start;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mut2); letter-spacing: 0.03em; line-height: 1.7; padding-top: 22px; text-align: right; padding-right: 18px;">
+                <div style="color: var(--mut);">{{ r.from }}</div>
+                <div>{{ r.to }}</div>
+              </div>
+              <div style="display: flex; justify-content: center; padding-top: 26px;">
+                <span style="{{ r.dotStyle }}"></span>
+              </div>
+              <div style="{{ r.cardStyle }}">
+                <div style="display: flex; gap: 16px; align-items: baseline; justify-content: space-between;">
+                  <div>
+                    <div style="font-size: 19px; font-weight: 600; letter-spacing: -0.022em; line-height: 1.25;">{{ r.role }}</div>
+                    <div style="font-size: 14.5px; color: var(--mut); margin-top: 5px; letter-spacing: -0.01em;">{{ r.org }}</div>
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--mut2); margin-top: 9px; letter-spacing: 0.06em;">{{ r.where }}</div>
+                  </div>
+                  <div style="{{ r.iconStyle }}">+</div>
+                </div>
+                <sc-if value="{{ r.isOpen }}">
+                  <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 10px;">
+                    <sc-for list="{{ r.points }}" as="pt" hint-placeholder-count="3">
+                      <div style="display: grid; grid-template-columns: 14px 1fr; gap: 10px; font-size: 14.5px; line-height: 1.58; color: var(--mut); text-wrap: pretty;">
+                        <span style="color: var(--acc); font-family: 'JetBrains Mono', monospace; font-size: 11px; padding-top: 3px;">—</span>
+                        <span>{{ pt }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 6px;">
+                    <sc-for list="{{ r.tags }}" as="t" hint-placeholder-count="3">
+                      <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 4px 9px; border-radius: 6px; border: 1px solid var(--line); color: var(--mut2);">{{ t }}</span>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section id="education" style="max-width: 1240px; margin: 0 auto; padding: 90px 28px 20px; scroll-margin-top: 54px;">
+      <div style="border-top: 1px solid var(--line); padding-top: 42px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mut2); margin-bottom: 14px;">Education</div>
+        <h2 style="margin: 0 0 34px; font-size: clamp(28px, 3.6vw, 44px); letter-spacing: -0.04em; font-weight: 700; line-height: 1.05;">Where the groundwork happened</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+          <sc-for list="{{ eduRecords }}" as="e" hint-placeholder-count="3">
+            <div style="padding: 24px; border-radius: 20px; border: 1px solid var(--line); background: var(--card); border-top: 2px solid var(--acc2); display: flex; flex-direction: column; gap: 14px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--acc2);">{{ e.when }}</div>
+              <div>
+                <div style="font-size: 18.5px; font-weight: 600; letter-spacing: -0.022em; line-height: 1.3;">{{ e.role }}</div>
+                <div style="font-size: 14.5px; color: var(--mut); margin-top: 6px; line-height: 1.45;">{{ e.org }}</div>
+              </div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mut2); letter-spacing: 0.05em;">{{ e.grade }} · {{ e.where }}</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto;">
+                <sc-for list="{{ e.tags }}" as="t" hint-placeholder-count="2">
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 4px 9px; border-radius: 6px; border: 1px solid var(--line); color: var(--mut2);">{{ t }}</span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section id="writing" style="max-width: 1240px; margin: 0 auto; padding: 110px 28px 40px; scroll-margin-top: 54px;">
+      <div style="border-top: 1px solid var(--line); padding-top: 42px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mut2); margin-bottom: 26px;">Writing &amp; elsewhere</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+          <a href="https://medium.com/@adityadesai2001" target="_blank" rel="noopener" style="display: flex; flex-direction: column; gap: 30px; padding: 24px; border-radius: 18px; border: 1px solid var(--line); background: var(--card); color: var(--fg); transition: background 400ms, transform 500ms cubic-bezier(0.22,1,0.36,1);" style-hover="background: var(--card-h); transform: translateY(-3px); color: var(--fg);">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mut2);">Blog</span>
+            <span style="font-size: 20px; font-weight: 600; letter-spacing: -0.025em;">Medium ↗</span>
+          </a>
+          <a href="https://github.com/Desaiadi" target="_blank" rel="noopener" style="display: flex; flex-direction: column; gap: 30px; padding: 24px; border-radius: 18px; border: 1px solid var(--line); background: var(--card); color: var(--fg); transition: background 400ms, transform 500ms cubic-bezier(0.22,1,0.36,1);" style-hover="background: var(--card-h); transform: translateY(-3px); color: var(--fg);">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mut2);">Code</span>
+            <span style="font-size: 20px; font-weight: 600; letter-spacing: -0.025em;">GitHub ↗</span>
+          </a>
+          <a href="https://www.linkedin.com/in/aditya-desai-871076210" target="_blank" rel="noopener" style="display: flex; flex-direction: column; gap: 30px; padding: 24px; border-radius: 18px; border: 1px solid var(--line); background: var(--card); color: var(--fg); transition: background 400ms, transform 500ms cubic-bezier(0.22,1,0.36,1);" style-hover="background: var(--card-h); transform: translateY(-3px); color: var(--fg);">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mut2);">Profile</span>
+            <span style="font-size: 20px; font-weight: 600; letter-spacing: -0.025em;">LinkedIn ↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" style="max-width: 1240px; margin: 0 auto; padding: 110px 28px 130px; scroll-margin-top: 54px;">
+      <div style="border-top: 1px solid var(--line); padding-top: 60px; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 40px; align-items: end;">
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mut2); margin-bottom: 18px;">Contact</div>
+          <h2 style="margin: 0; font-size: clamp(34px, 6.5vw, 84px); letter-spacing: -0.05em; font-weight: 700; line-height: 0.98;">Something worth<br />observing?</h2>
+        </div>
+        <a href="mailto:hello@proobs.com" style="display: inline-flex; align-items: center; gap: 10px; padding: 15px 28px; border-radius: 999px; background: var(--fg); color: var(--bg); font-size: 15px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; transition: transform 400ms cubic-bezier(0.22,1,0.36,1);" style-hover="transform: scale(1.035); color: var(--bg);">hello@proobs.com</a>
+      </div>
+    </section>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ isDetail }}">
+  <main style="max-width: 1000px; margin: 0 auto; padding: 108px 28px 130px;">
+    <button onClick="{{ goHome }}" style="border: 1px solid var(--line); background: var(--card); color: var(--mut); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 14px; border-radius: 999px; cursor: pointer; transition: all 300ms;" style-hover="color: var(--fg); border-color: var(--line2);">← Index</button>
+    <div style="margin-top: 40px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mut2);">{{ active.index }} — {{ active.year }}</div>
+    <h1 style="margin: 16px 0 0; font-size: clamp(38px, 7vw, 88px); letter-spacing: -0.05em; font-weight: 700; line-height: 0.96;">{{ active.name }}</h1>
+    <p style="margin: 20px 0 0; max-width: 620px; font-size: clamp(17px, 2.2vw, 23px); letter-spacing: -0.02em; color: var(--mut); line-height: 1.4;">{{ active.tagline }}</p>
+    <div style="margin-top: 22px; display: inline-flex; align-items: center; gap: 10px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.04em;">
+      <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--acc3); display: block;"></span>
+      <span style="color: var(--fg);">{{ active.sub }}</span>
+      <span style="color: var(--mut2);">— {{ active.status }}</span>
+    </div>
+    <sc-if value="{{ active.hasVideo }}">
+      <div style="margin-top: 48px; border-radius: 24px; overflow: hidden; border: 1px solid var(--line); background: #000; aspect-ratio: 16 / 9;">
+        <iframe data-video="{{ active.video }}" title="Project demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture" allowFullScreen="{{ true }}" style="width: 100%; height: 100%; border: 0; display: block;"></iframe>
+      </div>
+    </sc-if>
+    <sc-if value="{{ active.noVideo }}">
+      <div style="margin-top: 48px; border-radius: 24px; overflow: hidden; border: 1px solid var(--line); background: var(--bg2); aspect-ratio: 16 / 8;">
+        <div role="img" aria-label="{{ active.name }}" style="{{ active.imgStyle }}"></div>
+      </div>
+    </sc-if>
+    <div style="margin-top: 60px; display: grid; grid-template-columns: minmax(0,1.35fr) minmax(0,0.65fr); gap: 56px; align-items: start;">
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mut2); margin-bottom: 16px;">Description</div>
+        <p style="margin: 0; font-size: 17px; line-height: 1.65; color: var(--fg); opacity: 0.86; text-wrap: pretty;">{{ active.body }}</p>
+        <div style="margin-top: 44px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mut2); margin-bottom: 18px;">{{ active.listLabel }}</div>
+        <div style="display: flex; flex-direction: column;">
+          <sc-for list="{{ active.points }}" as="pt" hint-placeholder-count="4">
+            <div style="display: grid; grid-template-columns: 26px 1fr; gap: 8px; padding: 15px 0; border-top: 1px solid var(--line); font-size: 15.5px; line-height: 1.55; color: var(--mut);">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mut2); padding-top: 4px;">{{ pt.n }}</span>
+              <span>{{ pt.text }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <aside style="position: sticky; top: 90px; display: flex; flex-direction: column; gap: 26px; padding: 24px; border-radius: 20px; border: 1px solid var(--line); background: var(--card);">
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mut2); margin-bottom: 12px;">Stack</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <sc-for list="{{ active.stack }}" as="t" hint-placeholder-count="4">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; padding: 5px 9px; border-radius: 6px; border: 1px solid var(--line); color: var(--mut);">{{ t }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <a href="{{ active.link }}" target="_blank" rel="noopener" style="display: inline-flex; justify-content: center; padding: 12px 18px; border-radius: 999px; background: var(--fg); color: var(--bg); font-size: 14px; font-weight: 600; letter-spacing: -0.01em; transition: transform 400ms cubic-bezier(0.22,1,0.36,1);" style-hover="transform: scale(1.03); color: var(--bg);">{{ active.linkLabel }}</a>
+      </aside>
+    </div>
+    <div style="margin-top: 100px; border-top: 1px solid var(--line); padding-top: 26px; display: flex; justify-content: space-between; gap: 20px;">
+      <button onClick="{{ prev }}" style="border: 0; background: none; color: var(--mut); font-family: Manrope, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; cursor: pointer; text-align: left; transition: color 300ms;" style-hover="color: var(--fg);">← {{ prevName }}</button>
+      <button onClick="{{ next }}" style="border: 0; background: none; color: var(--mut); font-family: Manrope, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; cursor: pointer; text-align: right; transition: color 300ms;" style-hover="color: var(--fg);">{{ nextName }} →</button>
+    </div>
+  </main>
+  </sc-if>
+
+  <footer style="border-top: 1px solid var(--line); padding: 34px 28px; background: var(--bg);">
+    <div style="max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 18px; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mut2);">
+      <span>proobs — project observatory</span>
+      <span>Aditya Desai © 2026</span>
+    </div>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 900}, &quot;pointerFx&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Interaction&quot;}, &quot;defaultLayout&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;cards&quot;, &quot;grid&quot;], &quot;default&quot;: &quot;cards&quot;, &quot;tsType&quot;: &quot;\&quot;cards\&quot; | \&quot;grid\&quot;&quot;, &quot;section&quot;: &quot;Interaction&quot;}, &quot;startTheme&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;dark&quot;, &quot;light&quot;], &quot;default&quot;: &quot;dark&quot;, &quot;tsType&quot;: &quot;\&quot;dark\&quot; | \&quot;light\&quot;&quot;, &quot;section&quot;: &quot;Appearance&quot;}}">
+const ph = (label) => "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640"><defs><pattern id="s" width="16" height="16" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="16" stroke="rgba(127,132,140,0.18)" stroke-width="8"/></pattern></defs><rect width="1280" height="640" fill="url(#s)"/><text x="640" y="330" fill="rgba(127,132,140,0.95)" font-family="monospace" font-size="24" letter-spacing="5" text-anchor="middle">' + label + '</text></svg>');
+
+const imgStyle = (url) => "width: 100%; height: 100%; background-image: url('" + url + "'); background-size: cover; background-position: center; transition: transform 900ms cubic-bezier(0.22,1,0.36,1);";
+
+const IMG = {
+  rec: ph("REC-SENSE / SCREENSHOT"),
+  med: ph("MED-CHAT / SCREENSHOT"),
+  ecom: ph("ECOM-REALVIEW / SCREENSHOT"),
+  ipe: ph("IPE / SCREENSHOT"),
+  tg: ph("TECHNO-GREEN / SCREENSHOT"),
+  spx: ph("LANDING FORECASTER / SCREENSHOT"),
+  gbi: ph("GBI / SCREENSHOT"),
+  ph: ph("RESERVED SLOT")
+};
+
+const PROJECTS = [
+  {
+    name: "Rec-Sense", sub: "recsense.proobs.com", status: "hosting on hold", year: "2025", img: IMG.rec,
+    video: "https://www.youtube.com/embed/nBzSbglkfek",
+    tagline: "A recommender that asks how a film was received, not just what it resembles",
+    short: "Most recommenders rank on content similarity alone, so a bad sequel outranks a better film and cult classics stay buried. Rec-Sense scores reception across Twitter, YouTube, Reddit and IMDb and folds it — plus how sentiment moved over time — into the ranking.",
+    body: "In the current landscape of movie recommendation platforms, most systems recommend films based purely on content similarity without considering audience reception. This can lead to recommending sequels or similar movies that are poorly received, or overlooking cult classics that gained appreciation over time. Rec-Sense addresses these limitations by integrating multi-platform sentiment analysis to create a time-aware, reception-sensitive recommendation engine that rewards quality regardless of release timing. Content similarity comes from cosine similarity over a pre-computed matrix for 6,000+ movies; sentiment comes from platform-tailored Naive Bayes classifiers over TF-IDF features, trained to 98.8% accuracy on labelled reviews.",
+    listLabel: "How it ranks",
+    points: [
+      "Sentiment-Adjusted Similarity Score: SASS = α × ContentSimilarity + β × SocialSentiment + γ × TemporalTrend, with configurable weights.",
+      "Social sentiment is a weighted aggregate of Twitter, YouTube, Reddit and IMDb scores, weighted by data volume and reliability, community expertise, and correlation with box office and user satisfaction.",
+      "Sequel penalization: The Matrix scores 0.89 against 0.64 and 0.51 for its sequels, so Inception is recommended ahead of them despite lower content similarity.",
+      "Cult classic promotion: The Shawshank Redemption's rising sentiment over time is detected and ranked up decades after release.",
+      "Emerging quality detection: Everything Everywhere All at Once was surfaced early from strong signals in film-enthusiast communities on Reddit and YouTube.",
+      "Franchise fatigue detection and recency adjustment keep long series and thin-data new releases from skewing the ranking."
+    ],
+    stack: ["Python", "Flask", "scikit-learn", "Naive Bayes", "TF-IDF", "Twitter API", "Reddit API", "YouTube API", "Redis", "Kafka"],
+    link: "https://github.com/Desaiadi/Reccomender-System-With-Sentiment-Analysis"
+  },
+  {
+    name: "Med-Chat", sub: "medchat.proobs.com", status: "hosting on hold", year: "2024", img: IMG.med,
+    tagline: "Gen-AI based custom trained medical chatbot",
+    short: "A conversational assistant answering medical queries from a custom knowledge base built on The Gale Encyclopedia of Medicine.",
+    body: "An end-to-end conversational AI chatbot designed to answer medical-related queries using a large language model (LLM) and a custom knowledge base. It provides accurate and context-aware responses by leveraging \"The Gale Encyclopedia of Medicine\" as its primary data source. The chatbot features a user-friendly interface and supports flexible customization for enhanced user interaction.",
+    listLabel: "Techstack highlights",
+    points: [
+      "Llama-2-7B-Chat-GGML — Large language model fine-tuned for conversational understanding.",
+      "LangChain — Framework for building and deploying language models.",
+      "Flask — Web framework to create the user interface.",
+      "PineCone — Vector database for efficient storage and retrieval of embeddings.",
+      "Python — Core programming language for logic and functionality."
+    ],
+    stack: ["Llama-2", "LangChain", "Pinecone", "Flask", "Python"],
+    link: "https://github.com/Desaiadi/End-to-End-Medical-Chatbot"
+  },
+  {
+    name: "Ecom-Realview", sub: "ecomrealview.proobs.com", status: "hosting on hold", year: "2024", img: IMG.ecom,
+    tagline: "Realtime data analysis pipeline",
+    short: "End-to-end streaming pipeline for e-commerce data, from Kafka ingestion through Spark to live dashboards.",
+    body: "Ecom-Realview is a real-time data analysis pipeline designed for processing and analyzing e-commerce data from ingestion to visualization. It leverages Kafka for event streaming, Spark for real-time processing, Cassandra for raw data storage, MySQL for structured data storage, and Superset for interactive dashboards. This pipeline supports real-time decision-making and insights through end-to-end data flow and visualization.",
+    listLabel: "Techstack highlights",
+    points: [
+      "Apache Kafka — Real-time event streaming and message brokering.",
+      "Apache Spark Streaming — Real-time data ingestion, processing, and analytics.",
+      "Apache Cassandra — NoSQL database for raw data storage, offering scalability and high availability.",
+      "MySQL — Relational database for structured data storage and advanced querying.",
+      "Apache Superset — Dashboarding tool for data visualization and real-time analytics."
+    ],
+    stack: ["Kafka", "Spark Streaming", "Cassandra", "MySQL", "Superset"],
+    link: "https://github.com/Desaiadi/Real-Time-Market-Analysis-Pipeline"
+  },
+  {
+    name: "IPE", sub: "ipe.proobs.com", status: "hosting on hold", year: "2023", img: IMG.ipe,
+    tagline: "End to end insurance premium prediction",
+    short: "An MLOps project predicting insurance costs from health data, automated from ingestion to deployment.",
+    body: "This end-to-end project utilizes MLOps (Machine Learning Operations) principles to streamline the development, deployment, and maintenance of an insurance premium prediction model. By predicting insurance costs based on individual health data, the project empowers users to make informed insurance decisions, comparing premiums across providers with an understanding of their health factors. MLOps is integrated to automate the pipeline from data ingestion to model deployment, ensuring a consistent and scalable solution that can be updated with new data seamlessly.",
+    listLabel: "Tech stack",
+    points: [
+      "Programming Language: Python 3.7",
+      "Frontend: HTML, CSS · Backend: Flask, RESTful APIs",
+      "Machine Learning: Scikit-Learn (Regression models for premium prediction)",
+      "Data Analysis: Pandas, NumPy",
+      "MLOps Tools: Docker (containerization), GitHub Actions (CI/CD), Heroku (deployment)",
+      "Development Tools: Jupyter Notebook, Git"
+    ],
+    stack: ["Python", "Scikit-Learn", "Flask", "Docker", "GitHub Actions", "Heroku"],
+    link: "https://github.com/Desaiadi/Personal_INSURANCE_PREMIUM_PREDICTION"
+  },
+  {
+    name: "Techno-Green", sub: "technogreen.proobs.com", status: "hosting on hold", year: "2023", img: IMG.tg,
+    tagline: "AI based schedule generator",
+    short: "Precision-agriculture irrigation scheduling for greenhouse farming, predicted from crop and environmental data.",
+    body: "Techno Green Phase 2 advances precision agriculture by building an AI-powered irrigation schedule generator tailored for greenhouse farming. This project is a continuation of the initial \"Techno Green\" research on automated irrigation systems. It uses machine learning to predict optimized irrigation schedules based on crop-specific and environmental data. Through a user-friendly interface built with Flask, the system allows farmers to generate custom irrigation schedules by entering a crop name, ensuring accessible technology adoption.",
+    listLabel: "Key features",
+    points: [
+      "Automated dataset creation and preprocessing",
+      "Decision Tree Regression model for non-linear, interpretable predictions",
+      "CSV output with an irrigation schedule",
+      "Evaluation via MAE, MSE and R-squared for assessing model performance"
+    ],
+    stack: ["Decision Tree Regression", "pandas", "NumPy", "Flask", "Python"],
+    link: "https://github.com/Desaiadi/Techno-green--Phase-2"
+  },
+  {
+    name: "Landing Forecaster", sub: "forecaster.proobs.com", status: "hosting on hold", year: "2023", img: IMG.spx,
+    tagline: "Landing forecaster for SpaceX's Falcon 9",
+    short: "Predicting first-stage landing success to estimate the cost-efficiency of reusable launches.",
+    body: "This capstone project focuses on predicting the successful landing of SpaceX's Falcon 9 rocket's first stage, a crucial factor in estimating the cost-efficiency of SpaceX's reusable rockets. Given that SpaceX can significantly reduce launch costs by reusing the first stage, accurately forecasting a successful landing can help a competing startup make informed, competitive bids for rocket launches. The project takes on the end-to-end data science process, emulating the real-world experience of working with complex datasets and developing predictive models.",
+    listLabel: "Tech stack",
+    points: [
+      "Programming Languages: Python",
+      "Data Analysis and Wrangling: Pandas, NumPy, SQL",
+      "Data Visualization: Matplotlib, Seaborn, Plotly",
+      "Machine Learning Algorithms: Logistic Regression, Decision Trees, Support Vector Machines (SVM)",
+      "Deployment and MLOps Tools: Docker (for containerization), GitHub Actions (for CI/CD)",
+      "Development Tools: Jupyter Notebook, Git"
+    ],
+    stack: ["Python", "SQL", "Plotly", "Logistic Regression", "SVM", "Docker"],
+    link: "https://github.com/Desaiadi/IBM-Applied-Data-Science-Capstone-Project"
+  },
+  {
+    name: "GBI", sub: "genderbias.proobs.com", status: "hosting on hold", year: "2025", img: IMG.gbi,
+    tagline: "Teaching perceptions unveiled: analyzing gender bias and predictors in professor ratings",
+    short: "A statistical study of gender bias in RateMyProfessor data, with predictive models for teaching effectiveness.",
+    body: "This project investigates gender bias in professor ratings and identifies key predictors of teaching effectiveness using data from RateMyProfessor.com (RMP). I analyzed disparities in ratings, examined descriptive tags, and built predictive models to uncover patterns in evaluations. The findings aim to improve fairness in academia and provide actionable insights for educators and institutions. The dataset was built by scraping professor profiles, ratings, tags and institutional data, aggregating individual ratings into average scores, anonymizing identifying information, and cross-checking against a manually collected sample with a 98% match rate.",
+    listLabel: "Objectives",
+    points: [
+      "Gender bias in ratings: test whether the data shows evidence of a pro-male bias, controlling for the confounders earlier research was criticised for.",
+      "Variance in ratings: test whether the spread of the ratings distribution differs by gender.",
+      "Effect size estimation: estimate both effects with 95% confidence intervals.",
+      "Gender differences in tags: test each of the 20 tags to identify the most and least gendered.",
+      "Difficulty ratings: test for a gender difference in average difficulty and quantify it.",
+      "Prediction: regression models for average rating and difficulty from numerical and tag predictors, plus a classifier for the pepper badge, addressing collinearity and class imbalance."
+    ],
+    stack: ["Python", "BeautifulSoup", "Selenium", "Regression", "Bonferroni", "Classification"],
+    link: "https://github.com/Desaiadi/Analyzing-Gender-Bias-and-Predictors-in-Ratings"
+  }
+];
+
+const PLACEHOLDERS = [
+  { name: "OutAgent", tagline: "Agentic outreach system", short: "In progress. First project slated for its own home on this domain.", sub: "outagent.proobs.com", status: "in build" },
+  { name: "Slot 09", tagline: "Reserved", short: "Placeholder — send me the details and I will fill this in.", sub: "unassigned.proobs.com", status: "reserved" },
+  { name: "Slot 10", tagline: "Reserved", short: "Placeholder — send me the details and I will fill this in.", sub: "unassigned.proobs.com", status: "reserved" },
+  { name: "Slot 11", tagline: "Reserved", short: "Placeholder — send me the details and I will fill this in.", sub: "unassigned.proobs.com", status: "reserved" },
+  { name: "Slot 12", tagline: "Reserved", short: "Placeholder — send me the details and I will fill this in.", sub: "unassigned.proobs.com", status: "reserved" }
+];
+
+const EXPERIENCE = [
+  { role: "AI Engineer — NYU SPS", org: "New York University · Part-time", when: "May 2026 — Present", focus: true, where: "New York, NY · Hybrid", points: [], tags: ["AI", "Communication"] },
+  { role: "Project Intern — Machine Learning Researcher", org: "Northeastern University", when: "Sep 2025 — Jan 2026", focus: true, where: "Boston, MA · Hybrid", points: [
+    "Built DragonMAP, an end-to-end ontology alignment system for Mammalian Phenotype (MP) ↔ Human Phenotype (HP), framing alignment as a retrieval + re-ranking problem & prioritizing high-recall candidate generation to avoid early failure cascades.",
+    "Developed DragonAI lexical enrichment to synthesize missing concept fields (definitions/synonyms/examples) and applied quality control via semantic consistency and graph-based constraints to mitigate hallucinations and noisy generations.",
+    "Constructed a SeMRA prior by combining lexical similarity (Jaccard/TF–IDF/edit distance) with structural refinement (parent/child neighborhood context) to produce reliable candidate anchors and improve robustness under sparse/ambiguous labels.",
+    "Fine-tuned SapBERT with contrastive learning over synonym sets built from labels + ontology synonyms + enriched text + SeMRA-linked forms, learning dense biomedical concept representations for scalable retrieval.",
+    "Integrated vector search with BERTMap re-ranking and ran evaluation-driven ablations using Recall@{50,100,200} plus end-to-end metrics (Accuracy/Precision/Recall/F1), emphasizing reliable measurement of alignment quality."
+  ], tags: ["SapBERT", "Ontology alignment", "Retrieval", "Contrastive learning"] },
+  { role: "Graduate Assistant", org: "New York University · Part-time", when: "May 2025 — Dec 2025", where: "Manhattan, NY · On-site", points: ["Part of the Technology Enhanced Education team."], tags: ["EdTech"] },
+  { role: "AI Engineer", org: "Verusen AI · Internship", when: "May 2025 — Aug 2025", focus: true, where: "Atlanta, GA · Hybrid", points: [
+    "Developed and deployed Verusen Material AI (VMAI), an inventory insights platform.",
+    "Fine-tuned transformer architectures for automated material classification into 27 proprietary categories, aided with rule based classification to achieve 86% accuracy with cross-validation and reducing external API costs by 67%.",
+    "Engineered a hierarchical UNSPSC categorizer (57 segments → 566 families → 7997 classes → Commodities) by fine-tuning 310 million parameters aided with LangGraph APIs with human-in-the-loop validation, enabling continuous model improvement.",
+    "Designed scalable NLP preprocessing pipelines on Azure Databricks + Apache Spark, integrated with Jenkins/GitLab CI/CD, and optimized distributed GPU/CPU clusters for large-scale training and deployment, reducing processing time by 16%."
+  ], tags: ["Databricks", "Spark", "LangGraph", "Transformers", "CI/CD"] },
+  { role: "Data Science Intern", org: "Storyline Health · Internship", when: "Feb 2025 — May 2025", focus: true, where: "Salt Lake County, UT · Remote", points: [
+    "Developing and optimizing Retrieval-Augmented Generation (RAG) pipelines to enhance AI-driven multi-agent services.",
+    "Building Agentic AI models using LangChain, LangGraph, OpenAI, and OpenSearch to improve patient interactions.",
+    "Leveraging computer vision to extract 30,000 features and processing them with DALL·E to develop Storyline Behavioral AI for scalable patient monitoring and real-time updates.",
+    "Implemented range and term filters in OpenSearch, reducing response latency by 15% and improving system efficiency.",
+    "Conducting research on generative AI evaluation techniques using Ragas to enhance chatbot accuracy and reliability."
+  ], tags: ["RAG", "LangChain", "OpenSearch", "Agentic AI", "Ragas"] },
+  { role: "Software Engineer — Data", org: "Seamless Digital Automations Private Limited · Internship", when: "May 2022 — May 2024", focus: true, where: "Mumbai, India · Hybrid", points: [
+    "SeamOCR — streamlining digital invoice processing through advanced image and OCR technologies, combining an image processing engine and an OCR engine to convert invoice images into machine-readable text. Focused on image processing model optimization with OpenCV and PyTesseract.",
+    "Fine-tuned the image processing model to enhance OCR results significantly, standardizing parameter ratios and achieving a 65% improvement in OCR accuracy.",
+    "FDE Scraper — continuous collection, cleaning, and storage of financial data from 600 websites covering 5000 financial funds, using advanced SQL and NLP techniques including lemmatization to preprocess and refine the data."
+  ], tags: ["OpenCV", "PyTesseract", "SQL", "NLP"] },
+  { role: "Machine Learning — Project Intern", org: "iNeuron.ai · Part-time", when: "Jun 2023 — Jul 2023", focus: true, where: "Bengaluru, India · Remote", points: ["Implementation of MLOps to create end to end solutions."], tags: ["MLOps", "Deep Learning", "Data Science"] },
+  { role: "Machine Learning Intern", org: "Softron · Internship", when: "Jan 2023 — Jun 2023", focus: true, where: "Kolhapur, India · Hybrid", points: ["Worked on technologies like deep learning and NLP and built several projects on it."], tags: ["Computer Vision", "Statistics", "NLP"] },
+  { role: "Team Head · Head of Accumulator", org: "Team Nequit · Full-time", when: "Aug 2021 — Jun 2023", where: "Urun-Islampur, India", points: ["Designed an accumulator of Electrical Vehicle according to the rulebook of formula Bharat booklet.", "Participated in the FSEV competition."], tags: ["EV", "Formula Bharat"] },
+  { role: "Electrical Engineer", org: "Maharashtra State Electricity Distribution Co. Ltd. · Internship", when: "Jul 2021 — Aug 2021", where: "Maharashtra, India · On-site", points: [], tags: ["Power systems"] }
+];
+
+const EDUCATION = [
+  { role: "Master of Science — MS, Data Science", org: "NYU Center for Data Science", when: "Jul 2024 — May 2027", where: "New York, NY", grade: "Grade 3.9", tags: ["Artificial Intelligence (AI)", "Data Analysis"] },
+  { role: "Bachelor of Technology — BTech, Electrical Engineering", org: "Rajarambapu Institute of Technology, Rajaramnagar, Sakharale", when: "Jan 2019 — Jun 2023", where: "Maharashtra, India", grade: "Grade 9.07/10", tags: ["Electrical Engineering"] },
+  { role: "Minor — Computer Science Engineering", org: "Rajarambapu Institute of Technology, Rajaramnagar, Sakharale", when: "Jun 2020 — Jun 2023", where: "Maharashtra, India", grade: "Minor", tags: ["Research"] }
+];
+
+
+class Component extends DCLogic {
+  state = { theme: null, view: "home", active: 0, layout: null, expanded: -1, tab: "exp", openRec: -1 };
+
+  get theme() { return this.state.theme || this.props.startTheme || "dark"; }
+  get layout() { return this.state.layout || this.props.defaultLayout || "cards"; }
+
+  componentDidMount() {
+    this.initPointer();
+    this.io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = "1";
+          e.target.style.transform = "none";
+          this.io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    this.armReveals();
+  }
+
+  componentDidUpdate() { this.armReveals(); this.armTilts(); this.armVideo(); if (this.fx) this.armFigure(); }
+
+  armVideo() {
+    document.querySelectorAll("iframe[data-video]").forEach((el) => {
+      const src = el.getAttribute("data-video");
+      if (src && src.indexOf("{{") === -1 && el.src !== src) el.src = src;
+    });
+  }
+
+  initPointer() {
+    if (this.props.pointerFx === false) return;
+    if (window.matchMedia("(hover: none)").matches) return;
+    const q = (n) => document.querySelector("[data-fx='" + n + "']");
+    this.fx = { glow: q("glow"), ring: q("ring"), dot: q("dot") };
+    if (!this.fx.ring) return;
+    const s = { x: window.innerWidth / 2, y: window.innerHeight / 2, rx: 0, ry: 0, gx: 0, gy: 0, on: false };
+    this.pt = s;
+    const frame = () => {
+      s.rx += (s.x - s.rx) * 0.18;
+      s.ry += (s.y - s.ry) * 0.18;
+      s.gx += (s.x - s.gx) * 0.045;
+      s.gy += (s.y - s.gy) * 0.045;
+      if (this.fx.ring) this.fx.ring.style.transform = "translate3d(" + s.rx + "px," + s.ry + "px,0)";
+      if (this.fx.dot) this.fx.dot.style.transform = "translate3d(" + s.x + "px," + s.y + "px,0)";
+      if (this.fx.glow) this.fx.glow.style.transform = "translate3d(" + s.gx + "px," + s.gy + "px,0)";
+      this.raf = requestAnimationFrame(frame);
+    };
+    this.raf = requestAnimationFrame(frame);
+    this.onMove = (e) => {
+      s.x = e.clientX; s.y = e.clientY;
+      if (!s.on) {
+        s.on = true;
+        this.fx.ring.style.opacity = "1";
+        if (this.fx.dot) this.fx.dot.style.opacity = "1";
+        if (this.fx.glow) this.fx.glow.style.opacity = "1";
+      }
+      const t = e.target.closest("a, button, [data-tilt='1']");
+      const big = !!t;
+      const size = big ? (t.tagName === "ARTICLE" ? 64 : 44) : 26;
+      this.fx.ring.style.width = size + "px";
+      this.fx.ring.style.height = size + "px";
+      this.fx.ring.style.margin = (-size / 2) + "px 0 0 " + (-size / 2) + "px";
+      this.fx.ring.style.background = big ? "var(--fg)" : "transparent";
+      if (this.fx.dot) this.fx.dot.style.opacity = big ? "0" : "1";
+    };
+    this.onLeave = () => {
+      s.on = false;
+      this.fx.ring.style.opacity = "0";
+      if (this.fx.dot) this.fx.dot.style.opacity = "0";
+      if (this.fx.glow) this.fx.glow.style.opacity = "0";
+    };
+    window.addEventListener("pointermove", this.onMove, { passive: true });
+    document.addEventListener("pointerleave", this.onLeave);
+    this.armFigure();
+    this.armTilts();
+    this.armVideo();
+  }
+
+  armFigure() {
+    const panel = document.querySelector("[data-figure='1']");
+    const layer = document.querySelector("[data-figure-img='1']");
+    if (!panel || !layer || panel.dataset.armed) return;
+    panel.dataset.armed = "1";
+    panel.addEventListener("pointermove", (e) => {
+      const r = layer.getBoundingClientRect();
+      layer.style.setProperty("--mx", (e.clientX - r.left) + "px");
+      layer.style.setProperty("--my", (e.clientY - r.top) + "px");
+      layer.style.setProperty("--r", "300px");
+      layer.style.opacity = "1";
+      layer.style.transform = "scale(1.02)";
+    });
+    panel.addEventListener("pointerleave", () => {
+      layer.style.opacity = "0.13";
+      layer.style.transform = "scale(1)";
+      layer.style.removeProperty("--r");
+      layer.style.removeProperty("--mx");
+      layer.style.removeProperty("--my");
+    });
+  }
+
+  armTilts() {
+    if (!this.fx || this.props.pointerFx === false) return;
+    document.querySelectorAll("[data-tilt='1']").forEach((el) => {
+      if (el.dataset.tilted) return;
+      el.dataset.tilted = "1";
+      el.style.transformStyle = "preserve-3d";
+      el.addEventListener("pointermove", (e) => {
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        el.style.transition = "transform 220ms cubic-bezier(0.22,1,0.36,1)";
+        el.style.transform = "perspective(1100px) rotateY(" + (px * 3.2).toFixed(2) + "deg) rotateX(" + (-py * 2.4).toFixed(2) + "deg) translateZ(0)";
+      });
+      el.addEventListener("pointerleave", () => {
+        el.style.transition = "transform 900ms cubic-bezier(0.22,1,0.36,1)";
+        el.style.transform = "perspective(1100px) rotateY(0deg) rotateX(0deg)";
+      });
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.raf) cancelAnimationFrame(this.raf);
+    if (this.onMove) window.removeEventListener("pointermove", this.onMove);
+    if (this.onLeave) document.removeEventListener("pointerleave", this.onLeave);
+  }
+
+  armReveals() {
+    if (!this.io) return;
+    document.querySelectorAll("[data-reveal='1']").forEach((el) => {
+      if (el.dataset.armed) return;
+      el.dataset.armed = "1";
+      el.style.opacity = "0";
+      el.style.transform = "translateY(26px)";
+      el.style.transition = "opacity 900ms cubic-bezier(0.22,1,0.36,1), transform 900ms cubic-bezier(0.22,1,0.36,1)";
+      this.io.observe(el);
+    });
+  }
+
+  all() {
+    const total = PROJECTS.length + PLACEHOLDERS.length;
+    const list = PROJECTS.map((p, i) => Object.assign({}, p, {
+      index: String(i + 1).padStart(2, "0"),
+      imgStyle: imgStyle(p.img),
+      listLabel: p.listLabel,
+      linkLabel: "View on GitHub ↗",
+      points: p.points.map((t, n) => ({ n: String(n + 1).padStart(2, "0"), text: t }))
+    }));
+    PLACEHOLDERS.forEach((p, i) => list.push({
+      name: p.name, tagline: p.tagline, short: p.short, year: "soon", sub: p.sub, status: p.status,
+      index: String(PROJECTS.length + i + 1).padStart(2, "0"),
+      img: IMG.ph, imgStyle: imgStyle(IMG.ph), hasVideo: false, noVideo: true, body: p.short + " This entry is a reserved slot in the index, held so the catalogue reads complete while the work is still in flight.",
+      listLabel: "Notes", linkLabel: "Coming soon",
+      points: [{ n: "01", text: "Details to be added." }],
+      stack: ["TBD"], link: "#index", placeholder: true
+    }));
+    return { list: list, total: total };
+  }
+
+  seg(on) {
+    return "border: 0; cursor: pointer; padding: 8px 18px; border-radius: 999px; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 600; letter-spacing: -0.01em; transition: all 350ms cubic-bezier(0.22,1,0.36,1); " +
+      (on ? "background: var(--fg); color: var(--bg);" : "background: transparent; color: var(--mut);");
+  }
+
+  go(i) {
+    this.setState({ view: "project", active: i }, () => window.scrollTo({ top: 0, behavior: "auto" }));
+  }
+
+  renderVals() {
+    const data = this.all();
+    const list = data.list;
+    const a = this.state.active;
+    const shipped = PROJECTS.length;
+    return {
+      theme: this.theme,
+      themeIcon: this.theme === "dark" ? "☾" : "☀",
+      toggleTheme: () => this.setState({ theme: this.theme === "dark" ? "light" : "dark" }),
+      isHome: this.state.view === "home",
+      isDetail: this.state.view === "project",
+      goHome: (e) => { if (e) e.preventDefault(); this.setState({ view: "home" }); },
+      isCards: this.layout === "cards",
+      isGrid: this.layout === "grid",
+      setCards: () => this.setState({ layout: "cards" }),
+      setGrid: () => this.setState({ layout: "grid" }),
+      cardsBtn: this.seg(this.layout === "cards"),
+      gridBtn: this.seg(this.layout === "grid"),
+      countTotal: String(data.total).padStart(2, "0"),
+      countShipped: String(shipped).padStart(2, "0"),
+      countIncoming: String(data.total - shipped).padStart(2, "0"),
+      expRecords: EXPERIENCE.map((r, i) => {
+        const parts = r.when.split(" — ");
+        return Object.assign({}, r, {
+          from: parts[0], to: parts[1],
+          isOpen: this.state.openRec === i,
+          toggle: () => this.setState({ openRec: this.state.openRec === i ? -1 : i }),
+          dotStyle: "display: block; width: " + (r.focus ? "11px" : "8px") + "; height: " + (r.focus ? "11px" : "8px") + "; border-radius: 50%; background: " + (r.focus ? "var(--acc)" : "var(--bg)") + "; border: 1px solid " + (r.focus ? "var(--acc)" : "var(--line2)") + "; box-shadow: " + (r.focus ? "0 0 0 4px var(--glow)" : "none") + ";",
+          cardStyle: "padding: 20px 22px; border-radius: 18px; border: 1px solid " + (this.state.openRec === i ? "var(--line2)" : "var(--line)") + "; background: " + (this.state.openRec === i ? "var(--card-h)" : (r.focus ? "var(--card)" : "transparent")) + "; transition: background 400ms, border-color 400ms;",
+          iconStyle: "font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--mut2); transition: transform 400ms cubic-bezier(0.22,1,0.36,1); transform: rotate(" + (this.state.openRec === i ? "45deg" : "0deg") + ");"
+        });
+      }),
+      eduRecords: EDUCATION,
+      projects: list.map((p, i) => Object.assign({}, p, {
+        open: (e) => { if (e) e.stopPropagation(); this.go(i); },
+        expand: () => this.setState({ expanded: this.state.expanded === i ? -1 : i }),
+        isOpen: this.state.expanded === i,
+        tileStyle: "cursor: pointer; padding: 14px; border-radius: 20px; border: 1px solid " + (this.state.expanded === i ? "var(--line2)" : "var(--line)") +
+          "; background: " + (this.state.expanded === i ? "var(--card-h)" : "var(--card)") +
+          "; transition: background 400ms, border-color 400ms, transform 500ms cubic-bezier(0.22,1,0.36,1); align-self: start;"
+      })),
+      active: list[a],
+      prev: () => this.go((a - 1 + list.length) % list.length),
+      next: () => this.go((a + 1) % list.length),
+      prevName: list[(a - 1 + list.length) % list.length].name,
+      nextName: list[(a + 1) % list.length].name
+    };
+  }
+}
+
+</script>
+</body>
+</html>
